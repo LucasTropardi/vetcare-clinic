@@ -1,0 +1,76 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: grid;
+  place-items: center;
+  padding: var(--space-6);
+  z-index: var(--z-modal);
+}
+
+.panel {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-3);
+  overflow: hidden;
+}
+
+.header {
+  padding: var(--space-4);
+  border-bottom: var(--border-1) solid var(--border);
+}
+
+.title {
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-lg);
+}
+
+.body {
+  padding: var(--space-4);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-top: var(--border-1) solid var(--border);
+}
+
+.btnGhost,
+.btnPrimary {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  border: var(--border-1) solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+}
+
+.btnGhost:hover {
+  background: var(--surface-2);
+}
+
+.btnPrimary {
+  border-color: transparent;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+}
+
+.btnPrimary:hover {
+  background: var(--btn-bg-hover);
+}
+
+.btnDanger {
+  background: var(--danger);
+}
+
+.btnDanger:hover {
+  filter: brightness(0.95);
+}

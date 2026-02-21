@@ -1,0 +1,37 @@
+.wrapper {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  padding-right: 38px !important;
+}
+
+.calendarBtn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  display: inline-grid;
+  place-items: center;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.calendarBtn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.hiddenDate {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
