@@ -5,6 +5,7 @@ import { AuthLayout } from "../layouts/AuthLayout/AuthLayout";
 import { HomePage } from "../pages/Home/HomePage";
 import { LoginPage } from "../pages/Login/LoginPage";
 import { PlaceholderPage } from "../pages/Placeholder/PlaceholderPage";
+import { AttendimentosPage } from "../pages/Attendimentos/AttendimentosPage";
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +21,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "/", element: <HomePage /> },
       { path: "/agenda", element: <HomePage /> },
-      { path: "/atendimentos", element: <PlaceholderPage title="Atendimentos" /> },
+      { path: "/atendimentos", element: <AttendimentosPage /> },
       { path: "/prontuarios", element: <PlaceholderPage title="Prontuários" /> },
       { path: "/estoque-insumos", element: <PlaceholderPage title="Consulta de estoque" /> },
       { path: "/pacientes", element: <PlaceholderPage title="Pacientes" /> },

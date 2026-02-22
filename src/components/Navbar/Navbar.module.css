@@ -1,9 +1,9 @@
 .topbar {
-  height: 68px;
+  min-height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--space-6);
+  padding: var(--space-2) var(--space-6);
   border-bottom: var(--border-1) solid var(--border);
   background: color-mix(in srgb, var(--surface) 90%, transparent);
   backdrop-filter: blur(8px);
@@ -23,8 +23,8 @@
 }
 
 .iconButton {
-  height: 40px;
-  width: 40px;
+  height: 42px;
+  width: 42px;
   display: inline-grid;
   place-items: center;
   border-radius: var(--radius-md);
@@ -59,7 +59,7 @@
 
 @media (max-width: 900px) {
   .topbar {
-    height: 60px;
+    min-height: 64px;
     padding: 0 var(--space-4);
   }
 

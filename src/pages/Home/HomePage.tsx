@@ -3,21 +3,25 @@ import { CheckCircleIcon, ClockIcon, PlayCircleIcon, ScissorsIcon, StethoscopeIc
 import { useNavigate } from "react-router-dom";
 import { useNaming } from "../../i18n/useNaming";
 import { DateInputBR } from "../../components/DateInputBR/DateInputBR";
+import { listAppointments } from "../../services/api/appointments.service";
+import { listPets } from "../../services/api/pets.service";
+import { listProducts } from "../../services/api/products.service";
+import { getApiErrorMessage } from "../../services/api/errors";
+import type { AppointmentResponse, AppointmentStatus, AppointmentType } from "../../services/api/types";
+import { showMessage } from "../../store/message.store";
 import styles from "./HomePage.module.css";
 
-type AgendaStatus = "OPEN" | "IN_PROGRESS" | "FINISHED" | "CANCELED";
-type AgendaType = "VET" | "PETSHOP";
-type StatusFilter = "OPEN" | "IN_PROGRESS" | "FINISHED" | "CANCELED" | "ALL";
+type StatusFilter = "OPEN" | "FINISHED" | "CANCELED" | "ALL";
 
 type AgendaItem = {
   id: number;
-  type: AgendaType;
+  type: AppointmentType;
   petName: string;
   tutorName: string;
   serviceName?: string;
   scheduledDate: string;
   scheduledAt: string;
-  status: AgendaStatus;
+  status: AppointmentStatus;
   notes?: string;
 };
 
@@ -27,31 +31,48 @@ function toDateInputValue(date: Date) {
   return local.toISOString().slice(0, 10);
 }
 
+function startOfDayIso(dateInput: string) {
+  return new Date(`${dateInput}T00:00:00`).toISOString();
+}
+
+function endOfDayIso(dateInput: string) {
+  return new Date(`${dateInput}T23:59:59`).toISOString();
+}
+
 const TODAY = toDateInputValue(new Date());
-const TOMORROW = toDateInputValue(new Date(Date.now() + 24 * 60 * 60 * 1000));
 
-const MOCK_AGENDA: AgendaItem[] = [
-  { id: 1051, type: "VET", petName: "Thor", tutorName: "Lucas Tropardi", scheduledDate: TODAY, scheduledAt: "09:00", status: "OPEN", notes: "Retorno pós-cirúrgico" },
-  { id: 1052, type: "VET", petName: "Mia", tutorName: "Fernanda Silva", scheduledDate: TODAY, scheduledAt: "10:30", status: "IN_PROGRESS", notes: "Consulta dermatológica" },
-  { id: 1053, type: "VET", petName: "Nina", tutorName: "Rodrigo Souza", scheduledDate: TODAY, scheduledAt: "11:40", status: "OPEN" },
-  { id: 2061, type: "PETSHOP", petName: "Bob", tutorName: "Ana Beatriz", serviceName: "Banho e tosa", scheduledDate: TODAY, scheduledAt: "09:20", status: "OPEN" },
-  { id: 2062, type: "PETSHOP", petName: "Luna", tutorName: "Carlos Lima", serviceName: "Hidratação", scheduledDate: TODAY, scheduledAt: "10:50", status: "FINISHED" },
-  { id: 2063, type: "PETSHOP", petName: "Mel", tutorName: "Patrícia Alves", serviceName: "Tosa higiênica", scheduledDate: TODAY, scheduledAt: "13:10", status: "OPEN" },
-  { id: 3074, type: "VET", petName: "Zeca", tutorName: "Bruna Melo", scheduledDate: TOMORROW, scheduledAt: "08:40", status: "OPEN", notes: "Vacinação anual" },
-];
-
-function getStatusClass(status: AgendaStatus) {
-  if (status === "IN_PROGRESS") return "inProgress";
+function getStatusClass(status: AppointmentStatus) {
   if (status === "FINISHED") return "finished";
   if (status === "CANCELED") return "canceled";
   return "open";
 }
 
-function getStatusLabel(naming: ReturnType<typeof useNaming>, status: AgendaStatus) {
-  if (status === "IN_PROGRESS") return naming.t("agenda.status.inProgress");
+function getStatusLabel(naming: ReturnType<typeof useNaming>, status: AppointmentStatus) {
   if (status === "FINISHED") return naming.t("agenda.status.finished");
   if (status === "CANCELED") return naming.t("agenda.status.canceled");
   return naming.t("agenda.status.open");
+}
+
+function toAgendaItem(
+  a: AppointmentResponse,
+  petNameById: Map<number, string>,
+  serviceById: Map<number, string>
+): AgendaItem {
+  const dt = new Date(a.scheduledStartAt);
+  const date = Number.isNaN(dt.getTime()) ? TODAY : toDateInputValue(dt);
+  const at = Number.isNaN(dt.getTime()) ? "--:--" : dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+
+  return {
+    id: a.id,
+    type: a.appointmentType,
+    petName: petNameById.get(a.petId) ?? `Pet #${a.petId}`,
+    tutorName: "-",
+    serviceName: a.serviceProductId ? serviceById.get(a.serviceProductId) ?? `Serviço #${a.serviceProductId}` : undefined,
+    scheduledDate: date,
+    scheduledAt: at,
+    status: a.status,
+    notes: a.notes ?? undefined,
+  };
 }
 
 export function HomePage() {
@@ -60,10 +81,14 @@ export function HomePage() {
 
   const [selectedDate, setSelectedDate] = useState(TODAY);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("OPEN");
+  const [loading, setLoading] = useState(false);
+
+  const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
+  const [petNameById, setPetNameById] = useState<Map<number, string>>(new Map());
+  const [serviceById, setServiceById] = useState<Map<number, string>>(new Map());
 
   const statusPills: Array<{ key: StatusFilter; label: string }> = [
     { key: "OPEN", label: naming.t("agenda.filters.showOpen") },
-    { key: "IN_PROGRESS", label: naming.t("agenda.filters.showInProgress") },
     { key: "FINISHED", label: naming.t("agenda.filters.showFinished") },
     { key: "CANCELED", label: naming.t("agenda.filters.showCanceled") },
     { key: "ALL", label: naming.t("agenda.filters.showAll") },
@@ -71,19 +96,20 @@ export function HomePage() {
 
   function getStatusPillKindClass(key: StatusFilter) {
     if (key === "OPEN") return styles.pillOpen;
-    if (key === "IN_PROGRESS") return styles.pillInProgress;
     if (key === "FINISHED") return styles.pillFinished;
     if (key === "CANCELED") return styles.pillCanceled;
     return styles.pillAll;
   }
 
   const filtered = useMemo(() => {
-    return MOCK_AGENDA.filter((item) => {
-      if (item.scheduledDate !== selectedDate) return false;
-      if (statusFilter === "ALL") return true;
-      return item.status === statusFilter;
-    });
-  }, [selectedDate, statusFilter]);
+    return appointments
+      .map((a) => toAgendaItem(a, petNameById, serviceById))
+      .filter((item) => {
+        if (item.scheduledDate !== selectedDate) return false;
+        if (statusFilter === "ALL") return true;
+        return item.status === statusFilter;
+      });
+  }, [appointments, petNameById, serviceById, selectedDate, statusFilter]);
 
   const vetAppointments = useMemo(() => filtered.filter((item) => item.type === "VET"), [filtered]);
   const petshopAppointments = useMemo(() => filtered.filter((item) => item.type === "PETSHOP"), [filtered]);
@@ -91,6 +117,50 @@ export function HomePage() {
   useEffect(() => {
     document.title = `${naming.t("agenda.title")} • ${naming.getApp("name")}`;
   }, [naming]);
+
+  useEffect(() => {
+    const run = async () => {
+      setLoading(true);
+      try {
+        const [petsRes, productsRes] = await Promise.all([
+          listPets({ page: 0, size: 400, sort: "name,asc", active: true }),
+          listProducts({ page: 0, size: 400, sort: "name,asc", active: true }),
+        ]);
+
+        setPetNameById(new Map((petsRes.content ?? []).map((p) => [p.id, p.name])));
+        setServiceById(new Map((productsRes.content ?? []).map((p) => [p.id, p.name])));
+      } catch (err) {
+        showMessage({ title: "Agenda", message: getApiErrorMessage(err), variant: "error" });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    run();
+  }, []);
+
+  useEffect(() => {
+    const run = async () => {
+      setLoading(true);
+      try {
+        const res = await listAppointments({
+          page: 0,
+          size: 300,
+          sort: "scheduledStartAt,asc",
+          scheduledFrom: startOfDayIso(selectedDate),
+          scheduledTo: endOfDayIso(selectedDate),
+          status: statusFilter === "ALL" ? undefined : statusFilter,
+        });
+        setAppointments(res.content ?? []);
+      } catch (err) {
+        showMessage({ title: "Agenda", message: getApiErrorMessage(err), variant: "error" });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    run();
+  }, [selectedDate, statusFilter]);
 
   function goToAttendimentos(action: "start" | "finish" | "cancel", item: AgendaItem) {
     navigate("/atendimentos", {
@@ -156,7 +226,8 @@ export function HomePage() {
           </div>
 
           <div className={styles.cards}>
-            {vetAppointments.length === 0 && <div className={styles.empty}>{naming.t("agenda.empty")}</div>}
+            {loading && <div className={styles.empty}>Carregando...</div>}
+            {!loading && vetAppointments.length === 0 && <div className={styles.empty}>{naming.t("agenda.empty")}</div>}
             {vetAppointments.map((item) => (
               <article key={item.id} className={styles.card}>
                 <div className={styles.cardTop}>
@@ -202,7 +273,8 @@ export function HomePage() {
           </div>
 
           <div className={styles.cards}>
-            {petshopAppointments.length === 0 && <div className={styles.empty}>{naming.t("agenda.empty")}</div>}
+            {loading && <div className={styles.empty}>Carregando...</div>}
+            {!loading && petshopAppointments.length === 0 && <div className={styles.empty}>{naming.t("agenda.empty")}</div>}
             {petshopAppointments.map((item) => (
               <article key={item.id} className={styles.card}>
                 <div className={styles.cardTop}>
