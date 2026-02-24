@@ -177,6 +177,33 @@ export type PetListItemResponse = {
   active: boolean;
 };
 
+export type PetStatsResponse = {
+  total: number;
+  active: number;
+  inactive: number;
+  dogs: number;
+  cats: number;
+  others: number;
+};
+
+export type TutorListItemResponse = {
+  id: number;
+  name: string;
+  document?: string;
+  phone?: string;
+  email?: string;
+  active: boolean;
+};
+
+export type TutorStatsResponse = {
+  total: number;
+  active: number;
+  inactive: number;
+  withCompany: number;
+  withPet: number;
+  withoutContact: number;
+};
+
 export type ProductListItemResponse = {
   id: number;
   sku: string;

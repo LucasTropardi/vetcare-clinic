@@ -1,0 +1,544 @@
+.page {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--space-4);
+}
+
+.header {
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4) var(--space-5);
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--brand) 12%, var(--surface)) 0%, color-mix(in srgb, var(--info) 8%, var(--surface)) 45%, var(--surface) 100%);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-3xl);
+}
+
+.subtitle {
+  margin: var(--space-2) 0 0;
+  color: var(--text-muted);
+  max-width: 900px;
+}
+
+.layout {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.petsPanel {
+  min-height: 0;
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-xl);
+  background: color-mix(in srgb, var(--surface) 90%, var(--surface-2));
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.petsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.petsHeader h2 {
+  margin: 0;
+  font-size: var(--text-lg);
+}
+
+.petsHeader span {
+  border-radius: var(--radius-pill);
+  border: var(--border-1) solid var(--border);
+  padding: 2px 8px;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.searchField {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: var(--border-1) solid var(--input-border);
+  border-radius: var(--radius-md);
+  background: var(--input-bg);
+  padding: 0 var(--space-2);
+}
+
+.searchField input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  color: var(--input-text);
+  padding: 10px 6px;
+  font: inherit;
+}
+
+.searchField input:focus {
+  outline: 0;
+}
+
+.petsList {
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.petButton {
+  text-align: left;
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--surface) 94%, var(--surface-2));
+  padding: var(--space-3);
+  cursor: pointer;
+}
+
+.petButton:hover {
+  border-color: color-mix(in srgb, var(--brand) 35%, var(--border));
+}
+
+.petButtonActive {
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--border));
+  background: color-mix(in srgb, var(--brand) 12%, var(--surface));
+}
+
+.petTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.petName {
+  font-weight: var(--weight-semibold);
+}
+
+.petSpecies {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+}
+
+.petMeta {
+  margin-top: var(--space-1);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.contentPanel {
+  min-height: 0;
+  overflow: auto;
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-xl);
+  background: color-mix(in srgb, var(--surface) 94%, var(--surface-2));
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.emptyState {
+  min-height: 320px;
+  border: var(--border-1) dashed var(--border);
+  border-radius: var(--radius-lg);
+  display: grid;
+  place-content: center;
+  gap: var(--space-2);
+  color: var(--text-muted);
+  text-align: center;
+  padding: var(--space-4);
+}
+
+.emptyState h2 {
+  margin: 0;
+  font-size: var(--text-xl);
+  color: var(--text);
+}
+
+.emptyState p {
+  margin: 0;
+}
+
+.contextBar {
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  background:
+    radial-gradient(450px 220px at 0 -40%, color-mix(in srgb, var(--brand) 12%, transparent), transparent 70%),
+    var(--surface);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.patientIdentity h2 {
+  margin: 0;
+  font-size: var(--text-2xl);
+}
+
+.patientIdentity div {
+  margin-top: var(--space-1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.patientIdentity div span {
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  background: color-mix(in srgb, var(--surface) 90%, var(--surface-2));
+}
+
+.filtersGroup {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.filterPill {
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--text);
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.filterPillActive {
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--border));
+  background: color-mix(in srgb, var(--brand) 15%, var(--surface));
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.statCard {
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  padding: var(--space-3) var(--space-4);
+  display: grid;
+  gap: 4px;
+}
+
+.statCard span {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.statCard strong {
+  font-size: var(--text-2xl);
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.timelineItem {
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--surface) 95%, var(--surface-2));
+}
+
+.timelineButton {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+.timelineHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.timelineBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.idBadge,
+.kindBadge,
+.statusBadge {
+  border-radius: var(--radius-pill);
+  border: var(--border-1) solid var(--border);
+  padding: 3px 9px;
+  font-size: var(--text-xs);
+}
+
+.kindBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kindVet {
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--border));
+  background: color-mix(in srgb, var(--brand) 12%, var(--surface));
+}
+
+.kindPetshop {
+  border-color: color-mix(in srgb, var(--warning) 45%, var(--border));
+  background: color-mix(in srgb, var(--warning) 12%, var(--surface));
+}
+
+.statusOpen {
+  border-color: color-mix(in srgb, var(--info) 45%, var(--border));
+  background: color-mix(in srgb, var(--info) 12%, var(--surface));
+}
+
+.statusFinished {
+  border-color: color-mix(in srgb, var(--success) 45%, var(--border));
+  background: color-mix(in srgb, var(--success) 12%, var(--surface));
+}
+
+.statusCanceled {
+  border-color: color-mix(in srgb, var(--danger) 45%, var(--border));
+  background: color-mix(in srgb, var(--danger) 12%, var(--surface));
+}
+
+.when {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.timelineMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.notes {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.expandHint {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.detailPanel {
+  border-top: var(--border-1) solid var(--border);
+  background: color-mix(in srgb, var(--surface) 92%, var(--surface-2));
+  padding: var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.detailSection {
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.detailSection h3 {
+  margin: 0;
+  font-size: var(--text-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.fieldGrid div {
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--surface) 92%, var(--surface-2));
+  padding: var(--space-3);
+}
+
+.fieldGrid div span {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.fieldGrid div p {
+  margin: 8px 0 0;
+  white-space: pre-wrap;
+}
+
+.metricsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.metricsRow span {
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  font-size: var(--text-xs);
+  background: color-mix(in srgb, var(--surface) 90%, var(--surface-2));
+}
+
+.prescriptionCard {
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+  background: color-mix(in srgb, var(--surface) 94%, var(--surface-2));
+}
+
+.prescriptionTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.prescriptionTop p {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.guidance span {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.guidance p {
+  margin: 4px 0 0;
+  white-space: pre-wrap;
+}
+
+.itemsList {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.itemRow {
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding: var(--space-2) var(--space-3);
+  display: grid;
+  gap: 2px;
+}
+
+.itemRow span {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.inlineActions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.primaryBtn,
+.secondaryBtn {
+  height: 34px;
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-3);
+  border: var(--border-1) solid var(--border);
+  cursor: pointer;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.primaryBtn {
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--border));
+  background: color-mix(in srgb, var(--brand) 16%, var(--surface));
+}
+
+.secondaryBtn {
+  border-color: color-mix(in srgb, var(--info) 45%, var(--border));
+  background: color-mix(in srgb, var(--info) 12%, var(--surface));
+}
+
+.emptyText {
+  border: var(--border-1) dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  color: var(--text-muted);
+}
+
+.warningText {
+  border: var(--border-1) solid color-mix(in srgb, var(--warning) 45%, var(--border));
+  background: var(--warning-bg);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+@media (max-width: 1200px) {
+  .layout {
+    grid-template-columns: 280px minmax(0, 1fr);
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fieldGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .petsPanel {
+    max-height: 280px;
+  }
+
+  .timelineHeading,
+  .prescriptionTop {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

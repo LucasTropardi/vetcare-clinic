@@ -6,6 +6,9 @@ import { HomePage } from "../pages/Home/HomePage";
 import { LoginPage } from "../pages/Login/LoginPage";
 import { PlaceholderPage } from "../pages/Placeholder/PlaceholderPage";
 import { AttendimentosPage } from "../pages/Attendimentos/AttendimentosPage";
+import { ProntuariosPage } from "../pages/Prontuarios/ProntuariosPage";
+import { PacientesPage } from "../pages/Pacientes/PacientesPage";
+import { TutoresPage } from "../pages/Tutores/TutoresPage";
 
 export const router = createBrowserRouter([
   {
@@ -22,10 +25,10 @@ export const router = createBrowserRouter([
       { path: "/", element: <HomePage /> },
       { path: "/agenda", element: <HomePage /> },
       { path: "/atendimentos", element: <AttendimentosPage /> },
-      { path: "/prontuarios", element: <PlaceholderPage title="Prontuários" /> },
+      { path: "/prontuarios", element: <ProntuariosPage /> },
       { path: "/estoque-insumos", element: <PlaceholderPage title="Consulta de estoque" /> },
-      { path: "/pacientes", element: <PlaceholderPage title="Pacientes" /> },
-      { path: "/tutores", element: <PlaceholderPage title="Tutores" /> },
+      { path: "/pacientes", element: <PacientesPage /> },
+      { path: "/tutores", element: <TutoresPage /> },
       { path: "/config", element: <PlaceholderPage title="Configurações" /> },
     ],
   },

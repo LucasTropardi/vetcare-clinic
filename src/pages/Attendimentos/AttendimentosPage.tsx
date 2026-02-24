@@ -213,10 +213,7 @@ export function AttendimentosPage() {
     if (!state?.appointmentId || !state.action) return;
 
     if (state.action === "finish") {
-      await withApiError(async () => {
-        await finishAppointment(state.appointmentId!);
-        showMessage({ title: "Atendimento", message: "Atendimento finalizado com sucesso.", variant: "success" });
-      }, "Falha ao finalizar atendimento");
+      await finishAppointmentFlow(state.appointmentId!, { successMessage: "Atendimento finalizado com sucesso." });
       navigate("/agenda", { replace: true });
       return;
     }
@@ -234,10 +231,10 @@ export function AttendimentosPage() {
         return;
       }
 
-      await withApiError(async () => {
-        await cancelAppointment(state.appointmentId!, "Cancelado pelo usuário na agenda");
-        showMessage({ title: "Atendimento", message: "Atendimento desmarcado.", variant: "success" });
-      }, "Falha ao desmarcar atendimento");
+      await cancelAppointmentFlow(state.appointmentId!, {
+        reason: "Cancelado pelo usuário na agenda",
+        successMessage: "Atendimento desmarcado.",
+      });
       navigate("/agenda", { replace: true });
       return;
     }
@@ -260,6 +257,36 @@ export function AttendimentosPage() {
       await handleLocationAction();
     }, "Falha ao carregar atendimento");
   }, []);
+
+  async function finishAppointmentFlow(appointmentId: number, options?: { successMessage?: string }) {
+    await withApiError(async () => {
+      await finishAppointment(appointmentId);
+      showMessage({ title: "Atendimento", message: options?.successMessage ?? "Atendimento finalizado.", variant: "success" });
+    }, "Falha ao finalizar atendimento");
+  }
+
+  async function cancelAppointmentFlow(appointmentId: number, options: { reason: string; successMessage?: string }) {
+    await withApiError(async () => {
+      await cancelAppointment(appointmentId, options.reason);
+      showMessage({ title: "Atendimento", message: options.successMessage ?? "Atendimento desmarcado.", variant: "success" });
+    }, "Falha ao desmarcar atendimento");
+  }
+
+  async function handleFinishSelectedAppointment() {
+    if (!selectedAppointment) return;
+    await finishAppointmentFlow(selectedAppointment.id);
+    await loadAppointmentsOfToday();
+    setSelectedAppointment(null);
+    setSelectedAppointmentId(null);
+  }
+
+  async function handleCancelSelectedAppointment() {
+    if (!selectedAppointment) return;
+    await cancelAppointmentFlow(selectedAppointment.id, { reason: "Cancelado no fluxo de atendimento" });
+    await loadAppointmentsOfToday();
+    setSelectedAppointment(null);
+    setSelectedAppointmentId(null);
+  }
 
   async function handleManualCreate() {
     const petId = Number(manualPetId);
@@ -432,7 +459,7 @@ export function AttendimentosPage() {
   return (
     <section className={styles.page}>
       <header className={styles.header}>
-        <div>
+        <div className={styles.headerIntro}>
           <h1 className={styles.title}>Atendimentos</h1>
           <p className={styles.subtitle}>Fluxo clínico de consulta veterinária e execução de serviço petshop.</p>
         </div>
@@ -449,11 +476,6 @@ export function AttendimentosPage() {
           {!selectedAppointment && (
             <div className={styles.empty}>
               Selecione um atendimento aberto para iniciar.
-              {!listVisible && (
-                <div className={styles.inlineActions}>
-                  <button className={styles.secondaryBtn} onClick={() => setListVisible(true)}>Abrir lista de atendimentos</button>
-                </div>
-              )}
             </div>
           )}
 
@@ -482,20 +504,8 @@ export function AttendimentosPage() {
                   </div>
                 </div>
                 <div className={styles.inlineActions}>
-                  <button className={styles.secondaryBtn} onClick={() => withApiError(async () => {
-                    await finishAppointment(selectedAppointment.id);
-                    await loadAppointmentsOfToday();
-                    setSelectedAppointment(null);
-                    setSelectedAppointmentId(null);
-                    showMessage({ title: "Atendimento", message: "Atendimento finalizado.", variant: "success" });
-                  }, "Falha ao finalizar atendimento")}>Finalizar</button>
-                  <button className={styles.dangerBtn} onClick={() => withApiError(async () => {
-                    await cancelAppointment(selectedAppointment.id, "Cancelado no fluxo de atendimento");
-                    await loadAppointmentsOfToday();
-                    setSelectedAppointment(null);
-                    setSelectedAppointmentId(null);
-                    showMessage({ title: "Atendimento", message: "Atendimento desmarcado.", variant: "success" });
-                  }, "Falha ao desmarcar atendimento")}>Desmarcar</button>
+                  <button className={styles.secondaryBtn} onClick={() => void handleFinishSelectedAppointment()}>Finalizar</button>
+                  <button className={styles.dangerBtn} onClick={() => void handleCancelSelectedAppointment()}>Desmarcar</button>
                 </div>
               </section>
 

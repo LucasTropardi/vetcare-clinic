@@ -130,7 +130,7 @@ export function HomePage() {
         setPetNameById(new Map((petsRes.content ?? []).map((p) => [p.id, p.name])));
         setServiceById(new Map((productsRes.content ?? []).map((p) => [p.id, p.name])));
       } catch (err) {
-        showMessage({ title: "Agenda", message: getApiErrorMessage(err), variant: "error" });
+        showMessage({ title: "Agenda", message: getApiErrorMessage(err) ?? "Erro ao carregar dados", variant: "error" });
       } finally {
         setLoading(false);
       }
@@ -153,7 +153,7 @@ export function HomePage() {
         });
         setAppointments(res.content ?? []);
       } catch (err) {
-        showMessage({ title: "Agenda", message: getApiErrorMessage(err), variant: "error" });
+        showMessage({ title: "Agenda", message: getApiErrorMessage(err) ?? "Erro ao carregar dados", variant: "error" });
       } finally {
         setLoading(false);
       }

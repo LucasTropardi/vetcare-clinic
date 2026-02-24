@@ -11,6 +11,15 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
+  border: var(--border-1) solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4) var(--space-5);
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--info) 10%, var(--surface)) 0%, color-mix(in srgb, var(--brand) 7%, var(--surface)) 100%);
+}
+
+.headerIntro {
+  min-width: 0;
 }
 
 .headerActions {
