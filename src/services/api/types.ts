@@ -210,3 +210,38 @@ export type ProductListItemResponse = {
   name: string;
   active: boolean;
 };
+
+export type StockMovementType = "ENTRY_PURCHASE" | "EXIT_SALE" | "EXIT_VISIT_CONSUMPTION" | "ADJUSTMENT";
+
+export type StockBalanceListItemResponse = {
+  productId: number;
+  sku: string;
+  name: string;
+  onHand: number;
+  avgCost: number;
+  minStock: number;
+  belowMinStock: boolean;
+};
+
+export type StockMovementResponse = {
+  id: number;
+  productId: number;
+  movementType: StockMovementType;
+  quantity: number;
+  unitCost?: number | null;
+  notes?: string | null;
+  referenceType?: string | null;
+  referenceId?: number | null;
+  createdBy?: number | null;
+  createdAt: string;
+};
+
+export type CreateStockMovementRequest = {
+  productId: number;
+  movementType: StockMovementType;
+  quantity: number;
+  unitCost?: number;
+  notes?: string;
+  referenceType?: string;
+  referenceId?: number;
+};

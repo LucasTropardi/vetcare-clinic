@@ -9,6 +9,7 @@ import { AttendimentosPage } from "../pages/Attendimentos/AttendimentosPage";
 import { ProntuariosPage } from "../pages/Prontuarios/ProntuariosPage";
 import { PacientesPage } from "../pages/Pacientes/PacientesPage";
 import { TutoresPage } from "../pages/Tutores/TutoresPage";
+import { EstoqueInsumosPage } from "../pages/EstoqueInsumos/EstoqueInsumosPage";
 
 export const router = createBrowserRouter([
   {
@@ -26,7 +27,7 @@ export const router = createBrowserRouter([
       { path: "/agenda", element: <HomePage /> },
       { path: "/atendimentos", element: <AttendimentosPage /> },
       { path: "/prontuarios", element: <ProntuariosPage /> },
-      { path: "/estoque-insumos", element: <PlaceholderPage title="Consulta de estoque" /> },
+      { path: "/estoque-insumos", element: <EstoqueInsumosPage /> },
       { path: "/pacientes", element: <PacientesPage /> },
       { path: "/tutores", element: <TutoresPage /> },
       { path: "/config", element: <PlaceholderPage title="Configurações" /> },

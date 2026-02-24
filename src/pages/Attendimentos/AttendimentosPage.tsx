@@ -464,6 +464,12 @@ export function AttendimentosPage() {
           <p className={styles.subtitle}>Fluxo clínico de consulta veterinária e execução de serviço petshop.</p>
         </div>
         <div className={styles.headerActions}>
+          <button
+            className={styles.secondaryBtn}
+            onClick={() => navigate(`/estoque-insumos${selectedAppointmentId ? `?appointmentId=${selectedAppointmentId}` : ""}`)}
+          >
+            Consulta de estoque
+          </button>
           <button className={styles.secondaryBtn} onClick={() => setListVisible((v) => !v)}>
             {listVisible ? "Ocultar lista" : "Mostrar lista"}
           </button>
