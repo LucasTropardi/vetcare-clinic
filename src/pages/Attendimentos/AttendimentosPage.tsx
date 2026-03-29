@@ -129,7 +129,7 @@ export function AttendimentosPage() {
     try {
       await action();
     } catch (err) {
-      showMessage({ title, message: getApiErrorMessage(err), variant: "error" });
+      showMessage({ title, message: getApiErrorMessage(err) ?? "Erro desconhecido", variant: "error" });
     }
   }
 
